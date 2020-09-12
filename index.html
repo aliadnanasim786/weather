@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather API</title>
+    <style>
+        body {
+            background-color: rgb(11, 21, 78);
+            background-image: url('beach.jpg');
+            background-size: 100% 110%;
+            /* background-image: url('thunder.jpg');
+            background-size: 100% 100%; */
+        }
+        
+        .container {
+            height: 30vw;
+            width: 35vw;
+            /* border: 1px solid; */
+            padding-top: 1px;
+            margin: 4vw 0 0 27vw;
+            background-color: rgba(238, 235, 235, 0.6);
+            visibility: hidden;
+        }
+        
+        .show-data {
+            height: 25vw;
+            width: 30vw;
+            /* border: 1px solid; */
+            background-color: rgba(127, 221, 169, 0.6);
+            /* padding-top: 1px; */
+            margin: 2.5vw 0 0 2.5vw;
+            color: rgb(6, 58, 58);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+        
+        .input {
+            height: 4vw;
+            width: 25vw;
+            /* border: 1px solid; */
+            margin: 6vw 0 -30px 31.5vw;
+            background-color: rgba(238, 235, 235, 0.6);
+        }
+        
+        input {
+            height: 2vw;
+            width: 20vw;
+            margin: 11px 0 0 2.3vw;
+            outline-style: none;
+            background-color: rgba(127, 221, 169, 0.6);
+            color: rgb(6, 58, 58);
+            font-size: 1.1vw;
+            font-weight: bold;
+        }
+        
+        button {
+            position: absolute;
+            height: 2.5vw;
+            width: 10vw;
+            margin: -28vw 0 0 40vw;
+            color: rgb(6, 58, 58);
+            font-weight: bold;
+            border-radius: 10px;
+            outline-style: none;
+            font-size: 1.5vw;
+        }
+        
+        button:hover {
+            color: rgb(6, 58, 58);
+            background-color: rgba(127, 221, 169, 0.6);
+        }
+        
+        .city {
+            /* margin: 0.5vw 0 0 40%; */
+            font-size: 2.3vw;
+        }
+        
+        .temp {
+            /* margin: 0.7vw 0 0 43%; */
+            font-size: 3.5vw;
+        }
+        
+        .weather {
+            /* margin: 1vw 0 0 40%; */
+            font-size: 2vw;
+        }
+        
+        .date {
+            font-size: 1.2vw;
+        }
+        
+        .time {
+            font-size: 1.3vw
+        }
+        
+        .max-min {
+            font-size: 1.3vw
+        }
+    </style>
+</head>
+
+<body>
+    <div class="input">
+        <input type="text" placeholder="Enter Your City Name">
+    </div>
+
+    <div class="container">
+
+        <div class="show-data">
+            <div class="city showCh"></div>
+            <div class="temp showCh"></div>
+            <div class="max-min showCh"></div>
+            <!-- <h2>Enter Your City Name</h2> -->
+            <div class="weather showCh"></div>
+            <div class="date showCh"></div>
+            <!-- <div class="time showCh">10:00:00 PM</div> -->
+        </div>
+
+    </div>
+    <button onclick="show()">Show</button>
+
+
+
+</body>
+<script>
+    function show() {
+        var container = document.querySelector('.container').style
+        container.visibility = "visible"
+        var btn = document.querySelector('button').style
+        btn.marginTop = "1vw"
+
+        var city = document.getElementsByTagName('input')[0].value
+
+        var key = 'f5ae91169304fc721400664a1da4cb89';
+        fetch('https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + key + '&units=metric')
+            .then(blob => blob.json())
+            .then(data => {
+                showdata(data)
+            })
+    }
+
+
+    function showdata(w) {
+
+        // let container = document.querySelector('.container').style
+        // container.visiblty = "visible"
+
+        // let show = document.querySelector('.show-data')
+
+        let cityDiv = document.querySelector('.city').innerHTML = `${w.name}`
+        let tempDiv = document.querySelector('.temp').innerHTML = `${w.main.temp}&deg;C`
+        let maxMin = document.querySelector('.max-min').innerHTML = `Max ${w.main.temp_max}&deg;C / Min ${w.main.temp_min}&deg;C`
+        let weatherdiv = document.querySelector('.weather').innerHTML = `${w.weather[0].main}`
+
+
+        // show.innerHTML = ` <br> ${w.main.temp}C <br>  <br> Wind Speed ${w.wind.speed} km/h`
+        console.log(w);
+
+
+        var body = document.querySelector('body').style
+
+        // console.log(w.weather[0].main);
+
+        if (w.weather[0].main == "Smoke" || w.weather[0].main == "Haze") {
+            body.backgroundImage = "url('smoke.jpg')";
+            body.backgroundSize = "100% 113%";
+        } else if (w.weather[0].main == "Clear") {
+            body.backgroundImage = "url('clear.jpg')";
+            body.backgroundSize = "100% 113%";
+        } else if (w.weather[0].main == "thunderstrom") {
+            body.backgroundImage = "url('thunderstrom.jpg')";
+            body.backgroundSize = "100% 113%";
+        } else if (w.weather[0].main == "Clouds") {
+            body.backgroundImage = "url('cloud.jpg')";
+            body.backgroundSize = "100% 113%"
+        } else if (w.weather[0].main == "Rain") {
+            body.backgroundImage = "url('rainy.jpg')";
+            body.backgroundSize = "100% 113%"
+        }
+
+        // Time And Date
+        var date = new Date()
+        var date1 = date.getDate()
+        var month1 = date.getMonth()
+        var year1 = date.getFullYear()
+        var day1 = date.getDay()
+
+        var dayName = ['Sunday', 'Monday', 'Teusday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        var monthName = ['January', 'Februray', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
+        let dateDiv = document.querySelector('.date').innerHTML = `${date1}, ${monthName[month1]}, ${year1} ${dayName[day1]}`
+            // console.log(dateDiv);
+
+        // function clockTime() {
+        //     var time = new Date()
+        //     let timeDiv = document.querySelector('.time').innerHTML = `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`
+
+
+        // }
+        // setInterval(clockTime, 1000)
+    }
+</script>
+
+</html>
